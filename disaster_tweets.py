@@ -153,6 +153,6 @@ def run_process():
 	# save predictions
 	results = np.array(list(zip(raw_data_test.id,predictions)))
 	results = pd.DataFrame(results, columns=['id', 'target'])
-	results.to_csv('nb_results.csv', index = False)
+	results.to_csv('results.csv', index = False)
 
 run_process()
