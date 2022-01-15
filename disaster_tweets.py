@@ -47,7 +47,6 @@ def clean_text(text, i_eng):
 		text = text.apply(lambda x:re.sub('[%s]' % re.escape(string.punctuation), '', x) )# remove punctuation
 		text = text.apply(lambda x:re.sub('\n' , '', x) ) # remove newline
 		text = text.apply(lambda row: re.sub(r'(?<!\S)\d+(?!\S)', lambda x: i_eng.number_to_words(x.group()), row)) # convert numbers to words
-		# text = text.apply(lambda x:re.sub(' +', ' ', x)) # remove spaces
 		
 	else:
 		text = text.applymap(lambda x:x.lower()) # lowercase
@@ -57,7 +56,6 @@ def clean_text(text, i_eng):
 		text = text.applymap(lambda x:re.sub('[%s]' % re.escape(string.punctuation), '', x) ) # remove punctuation
 		text = text.applymap(lambda x:re.sub('\n' , '', x) ) # remove newline
 		text = text.applymap(lambda row: re.sub(r'(?<!\S)\d+(?!\S)', lambda x: i_eng.number_to_words(x.group()), row)) # convert numbers to words
-		# text = text.applymap(lambda x:re.sub(' +', ' ', x)) # remove spaces
 
 	return text
 
@@ -90,8 +88,6 @@ def fit_models(X_train, X_test, y_train, y_test):
 	print(scores)
 
 	return scores[0]
-
-
 
 def run_process():
 	# get data
@@ -126,7 +122,7 @@ def run_process():
 	# vectorize 
 	vectorizer = CountVectorizer()
 	X_train = vectorizer.fit_transform(X_train)
-	X_test = vectorizer.transform(X_test)
+	# X_test = vectorizer.transform(X_test)
 	test_pred = vectorizer.transform(test_pred)
 
 	# X_train = hstack([vectorizer.fit_transform(X_train.text),vectorizer.fit_transform(X_train.location), vectorizer.fit_transform(X_train.keyword)], 'csr')
@@ -143,12 +139,12 @@ def run_process():
 	loaded_model = pickle.load(open('model', 'rb'))
 
 	# predictions
-	predictions = loaded_model.predict(X_test)
+	predictions = loaded_model.predict(test_pred)
 
 	# prediction scores
-	print(loaded_model, confusion_matrix(y_test,predictions))
-	print(loaded_model, classification_report(y_test,predictions))
-	print(loaded_model, metrics.accuracy_score(y_test, predictions)*100)
+	# print(loaded_model, confusion_matrix(y_test,predictions))
+	# print(loaded_model, classification_report(y_test,predictions))
+	# print(loaded_model, metrics.accuracy_score(y_test, predictions)*100)
 
 	# save predictions
 	results = np.array(list(zip(raw_data_test.id,predictions)))
